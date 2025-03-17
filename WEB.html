@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Weather and Moisture Data</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 2.5em;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .data {
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+        .data label {
+            font-weight: bold;
+            color: #555;
+        }
+        .data span {
+            color: #333;
+        }
+        .button {
+            background-color: #e97d00;
+            color: white;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #f59e42;
+        }
+        #countdown {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #e97d00;
+            margin-top: 20px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #777;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            .button {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Real-Time Weather and Moisture Data</h1>
+    <div class="container">
+        <div class="data">
+            <label for="humidity">Humidity: </label>
+            <span id="humidity">Loading...</span> %
+        </div>
+        <div class="data">
+            <label for="moisture">Soil Moisture: </label>
+            <span id="moisture">Loading...</span> %
+        </div>
+
+        <div class="data">
+            <label for="water">Water Needed: </label>
+            <span id="water">0</span> liters
+        </div>
+
+        <div id="countdown"></div>
+        <button class="button" onclick="calculateWater()">Calculate Water</button>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 Agro Innovators | All Rights Reserved</p>
+    </div>
+
+    <script>
+        let countdownTimer;
+        let countdownValue = 10; // Countdown in seconds
+        let isCalculating = false;
+
+        function updateWeatherData(humidity, moisture) {
+            document.getElementById("humidity").innerText = humidity;
+            document.getElementById("moisture").innerText = moisture;
+        }
+
+        function calculateWater() {
+            isCalculating = true;
+            let humidity = parseInt(document.getElementById("humidity").innerText);
+            let moisture = parseInt(document.getElementById("moisture").innerText);
+            
+            // Simple formula for water calculation
+            let waterRequired = (100 - moisture) * 0.1; // Customize as needed
+            document.getElementById("water").innerText = waterRequired.toFixed(2);
+
+            // Reset countdown when calculation is done
+            clearInterval(countdownTimer);
+            document.getElementById("countdown").innerText = '';
+        }
+
+        function startCountdown() {
+            countdownTimer = setInterval(() => {
+                if (countdownValue > 0) {
+                    document.getElementById("countdown").innerText = `Calculating... ${countdownValue} seconds remaining`;
+                    countdownValue--;
+                } else {
+                    clearInterval(countdownTimer);
+                    fetchLiveWeatherData();  // Fetch live weather data if calculation takes too long
+                }
+            }, 1000);
+        }
+
+        function fetchWeatherData() {
+            fetch("http://your_esp32_ip_address/weatherdata")
+                .then(response => response.json())
+                .then(data => {
+                    updateWeatherData(data.humidity, data.moisture);
+                    startCountdown(); // Start countdown when data is fetched
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                    alert("Failed to load data!");
+                });
+        }
+
+        function fetchLiveWeatherData() {
+            fetch("/get-live-weather")  // Your backend API to fetch live weather data
+                .then(response => response.json())
+                .then(data => {
+                    // Update with live weather data
+                    document.getElementById("humidity").innerText = data.humidity;
+                    document.getElementById("moisture").innerText = data.moisture;
+                    document.getElementById("water").innerText = data.waterRequired;
+                })
+                .catch(error => {
+                    console.error("Error fetching live weather data:", error);
+                    alert("Failed to load live data!");
+                });
+        }
+
+        // Fetch weather data every 5 seconds
+        setInterval(fetchWeatherData, 5000);
+        fetchWeatherData(); // Initial fetch
+    </script>
+
+</body>
+</html>

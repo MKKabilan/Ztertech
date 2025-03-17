@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Irrigation System - Crop Water Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff; /* White background */
+            color: #333; /* Dark text color for readability */
+            text-align: center;
+        }
+        h1 {
+            color: #e97d00; /* Orange color for the main title */
+        }
+        .calculator {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            margin: 30px auto;
+            border: 2px solid #e97d00;
+        }
+        .calculator input, .calculator select {
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 80%;
+        }
+        .button {
+            background-color: #e97d00; /* Orange background for buttons */
+            color: white; /* White text on the button */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #d86a00; /* Darker orange on hover */
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9f7db;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Smart Irrigation System - Crop Water Requirement Calculator</h1>
+
+    <div class="calculator">
+        <h2>Calculate Water Requirements</h2>
+        <form id="waterCalculatorForm">
+            <label for="cropType">Crop Type:</label>
+            <select id="cropType">
+                <option value="rice">Rice</option>
+                <option value="wheat">Wheat</option>
+                <option value="corn">Corn</option>
+                <option value="tomato">Tomato</option>
+                <option value="potato">Potato</option>
+                <option value="soybean">Soybean</option>
+                <option value="cotton">Cotton</option>
+                <option value="sugarcane">Sugarcane</option>
+                <option value="banana">Banana</option>
+                <option value="coffee">Coffee</option>
+            </select><br><br>
+
+            <label for="area">Area (in hectares):</label>
+            <input type="number" id="area" placeholder="Enter area in hectares" required><br><br>
+
+            <label for="climate">Climate:</label>
+            <select id="climate">
+                <option value="hot">Hot</option>
+                <option value="moderate">Moderate</option>
+                <option value="cool">Cool</option>
+            </select><br><br>
+
+            <label for="soilType">Soil Type:</label>
+            <select id="soilType">
+                <option value="sandy">Sandy</option>
+                <option value="loamy">Loamy</option>
+                <option value="clay">Clay</option>
+                <option value="saline">Saline</option>
+            </select><br><br>
+
+            <label for="growthStage">Crop Growth Stage:</label>
+            <select id="growthStage">
+                <option value="germination">Germination</option>
+                <option value="vegetative">Vegetative</option>
+                <option value="flowering">Flowering</option>
+                <option value="maturity">Maturity</option>
+            </select><br><br>
+
+            <label for="irrigationSystem">Irrigation System Type:</label>
+            <select id="irrigationSystem">
+                <option value="drip">Drip</option>
+                <option value="sprinkler">Sprinkler</option>
+                <option value="flood">Flood</option>
+                <option value="surface">Surface</option>
+            </select><br><br>
+
+            <label for="rainfall">Rainfall (mm):</label>
+            <input type="number" id="rainfall" placeholder="Enter recent rainfall in mm"><br><br>
+
+            <label for="evapotranspiration">Evapotranspiration (ET) (mm/day):</label>
+            <input type="number" id="evapotranspiration" placeholder="Enter ET in mm/day"><br><br>
+
+            <button type="button" class="button" onclick="calculateWater()">Calculate Water Requirement</button>
+        </form>
+
+        <div id="result">
+            <p id="calculatedWater"></p>
+        </div>
+    </div>
+
+    <script>
+        function calculateWater() {
+            const cropType = document.getElementById("cropType").value;
+            const area = parseFloat(document.getElementById("area").value);
+            const climate = document.getElementById("climate").value;
+            const soilType = document.getElementById("soilType").value;
+            const growthStage = document.getElementById("growthStage").value;
+            const irrigationSystem = document.getElementById("irrigationSystem").value;
+            const rainfall = parseFloat(document.getElementById("rainfall").value) || 0;
+            const evapotranspiration = parseFloat(document.getElementById("evapotranspiration").value) || 0;
+
+            if (!area || area <= 0) {
+                alert("Please enter a valid area.");
+                return;
+            }
+
+            let waterRequirement = 0;
+
+            // Water requirement based on crop type (simplified example)
+            if (cropType === "rice") {
+                waterRequirement = 5000;
+            } else if (cropType === "wheat") {
+                waterRequirement = 4000;
+            } else if (cropType === "corn") {
+                waterRequirement = 3000;
+            } else if (cropType === "tomato") {
+                waterRequirement = 3500;
+            } else if (cropType === "potato") {
+                waterRequirement = 4500;
+            } else if (cropType === "soybean") {
+                waterRequirement = 3000;
+            } else if (cropType === "cotton") {
+                waterRequirement = 6000;
+            } else if (cropType === "sugarcane") {
+                waterRequirement = 7000;
+            } else if (cropType === "banana") {
+                waterRequirement = 5500;
+            } else if (cropType === "coffee") {
+                waterRequirement = 4000;
+            }
+
+            // Adjusting based on climate
+            if (climate === "hot") {
+                waterRequirement *= 1.2;
+            } else if (climate === "cool") {
+                waterRequirement *= 0.8;
+            }
+
+            // Adjusting based on soil type
+            if (soilType === "sandy") {
+                waterRequirement *= 1.3; // Sandy soil requires more water
+            } else if (soilType === "clay") {
+                waterRequirement *= 0.9; // Clay soil retains water better
+            } else if (soilType === "saline") {
+                waterRequirement *= 1.5; // Saline soil may need more water
+            }
+
+            // Adjusting based on crop growth stage
+            if (growthStage === "germination") {
+                waterRequirement *= 1.1;
+            } else if (growthStage === "maturity") {
+                waterRequirement *= 0.9;
+            }
+
+            // Adjusting based on irrigation system type
+            if (irrigationSystem === "drip") {
+                waterRequirement *= 0.8; // Drip irrigation is more efficient
+            } else if (irrigationSystem === "sprinkler") {
+                waterRequirement *= 1.1; // Sprinkler irrigation can waste water
+            } else if (irrigationSystem === "surface") {
+                waterRequirement *= 1.2; // Surface irrigation is less efficient
+            }
+
+            // Subtracting rainfall
+            waterRequirement -= rainfall;
+
+            // Adjusting based on evapotranspiration (ET)
+            if (evapotranspiration > 0) {
+                waterRequirement += evapotranspiration * area; // ET increases water need
+            }
+
+            // Calculate the total water required for the given area
+            const totalWaterRequired = waterRequirement * area;
+            const message = `Total Water Requirement for ${area} hectare(s) of ${cropType} in ${climate} climate, with ${soilType} soil and ${growthStage} stage, using ${irrigationSystem} irrigation system: ${totalWaterRequired.toFixed(2)} liters per day.`;
+
+            document.getElementById("calculatedWater").innerText = message;
+        }
+    </script>
+</body>
+</html>
