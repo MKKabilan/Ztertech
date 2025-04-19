@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kaya's Spin & Win Contest</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    :root {
+      --primary: #4e6b1f;
+      --accent: #ffffff;
+      --bg: #f4fdf5;
+      --text: #2f3e1c;
+      --border: #d1e4c8;
+      --shadow: rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(45deg, #b7e4c7, #c1f0dc, #d2f4ea);
+      background-size: 200% 200%;
+      animation: gradientBG 5s ease infinite;
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    @keyframes gradientBG {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 8px 20px var(--shadow);
+      text-align: center;
+    }
+
+    .logo {
+      width: 120px;
+      margin: 0 auto 1rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    p.description {
+      color: #4b5563;
+      margin-bottom: 1.5rem;
+    }
+
+    .wheel-container {
+      position: relative;
+      width: 100%;
+      max-width: 300px;
+      height: 300px;
+      margin: 0 auto 1.5rem;
+    }
+
+    #wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 6px solid var(--border);
+      transition: transform 5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    #pointer {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 30px solid var(--primary);
+    }
+
+    button.spin-btn, .follow-btn {
+      background: var(--primary);
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    button.spin-btn:hover, .follow-btn:hover {
+      background: #395014;
+    }
+
+    .result-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .result-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: center;
+      width: 80%;
+      max-width: 400px;
+    }
+
+    .result-content h2 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .result-content p {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .close-btn {
+      background: #dc2626;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      background: #b91c1c;
+    }
+
+    @media(max-width: 500px) {
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      .wheel-container {
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="Kaya's Spin & Win Contest.png" alt="Kaya's Logo" class="logo" />
+    <h1>Kaya's Spin & Win Contest</h1>
+    <p class="description">Try your luck and win exclusive health rewards! Follow us on Instagram after spinning to claim your prize.</p>
+
+    <div class="wheel-container">
+      <div id="pointer"></div>
+      <canvas id="wheel" width="300" height="300"></canvas>
+    </div>
+
+    <button class="spin-btn" onclick="spin()">🎯 Spin Now</button>
+  </div>
+
+  <!-- Modal for Result -->
+  <div id="resultModal" class="result-modal">
+    <div class="result-content">
+      <h2 id="resultTitle"></h2>
+      <p id="resultMessage"></p>
+      <p id="rewardDetails"></p>
+      <button class="follow-btn" id="followBtn" onclick="window.open('https://www.instagram.com/kayas_healthy_life/', '_blank')">
+        👉 Follow us on Instagram to claim your reward
+      </button>
+      <br />
+      <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <audio id="spinSound" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
+
+  <script>
+    const canvas = document.getElementById('wheel');
+    const ctx = canvas.getContext('2d');
+    const spinSound = document.getElementById('spinSound');
+    const resultModal = document.getElementById('resultModal');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultMessage = document.getElementById('resultMessage');
+    const rewardDetails = document.getElementById('rewardDetails');
+    const followBtn = document.getElementById('followBtn');
+
+    const prizes = [
+      { prize: '10% OFF', details: 'Use this code to get 10% off on your next purchase!' },
+      { prize: 'Free Shipping', details: 'Enjoy free shipping on your next order. No minimum required!' },
+      { prize: 'Buy 1 Get 1', details: 'Buy one product and get another one for free. Limited offer!' },
+      { prize: '20% OFF', details: 'Use the code for a 20% discount on your order.' },
+      { prize: 'Free Gift', details: 'Get a free gift with your next purchase. Enjoy your surprise!' },
+      { prize: '5% OFF', details: 'Get 5% off your next order with this exclusive discount!' }
+    ];
+
+    const colors = ['#b7e4c7', '#c1f0dc', '#d2f4ea', '#c7e5c9', '#e1f3e6', '#def2d9'];
+
+    function drawWheel() {
+      const arcSize = 2 * Math.PI / prizes.length;
+      for (let i = 0; i < prizes.length; i++) {
+        const startAngle = i * arcSize;
+        const endAngle = startAngle + arcSize;
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.beginPath();
+        ctx.moveTo(150, 150);
+        ctx.arc(150, 150, 150, startAngle, endAngle);
+        ctx.lineTo(150, 150);
+        ctx.fill();
+
+        ctx.save();
+        ctx.translate(150, 150);
+        ctx.rotate(startAngle + arcSize / 2);
+        ctx.fillStyle = '#2f3e1c';
+        ctx.font = '14px sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(prizes[i].prize, 140, 5);
+        ctx.restore();
+      }
+    }
+
+    let spinning = false;
+
+    function spin() {
+      if (spinning) return;
+
+      if (localStorage.getItem('spin') === 'true') {
+        resultTitle.innerHTML = '⚠️ You already spin!';
+        resultMessage.innerHTML = 'One spin per person.';
+        openModal();
+        return;
+      }
+
+      spinning = true;
+      spinSound.play();
+      resultTitle.innerHTML = "Spinning... 🌀";
+      resultMessage.innerHTML = "Please wait...";
+      rewardDetails.innerHTML = "";
+
+      const spins = Math.floor(Math.random() * 3) + 4;
+      const randomAngle = Math.random() * 360;
+      const totalAngle = 360 * spins + randomAngle;
+
+      canvas.style.transform = `rotate(${totalAngle}deg)`;
+
+      setTimeout(() => {
+        localStorage.setItem('spin', 'true');
+        
+        // Calculate the prize based on the final angle of the wheel
+        const arcSize = 360 / prizes.length;
+        const degrees = totalAngle % 360;
+        const index = Math.floor((360 - degrees) / arcSize) % prizes.length;
+        const prize = prizes[index];
+
+        resultTitle.innerHTML = `🎉 You won ${prize.prize}!`;
+        resultMessage.innerHTML = "Congratulations!";
+        rewardDetails.innerHTML = prize.details;
+
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+
+        openModal();
+        spinning = false;
+      }, 5000);
+    }
+
+    function openModal() {
+      resultModal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      resultModal.style.display = 'none';
+    }
+
+    drawWheel();
+  </script>
+</body>
+</html>
