@@ -35,15 +35,9 @@
     }
 
     @keyframes gradientBG {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .container {
@@ -167,7 +161,13 @@
       }
 
       .wheel-container {
-        height: 250px;
+        height: 220px;
+        max-width: 220px;
+      }
+
+      canvas {
+        width: 220px !important;
+        height: 220px !important;
       }
     }
   </style>
@@ -186,31 +186,30 @@
     <button class="spin-btn" onclick="spin()">🎯 Spin Now</button>
   </div>
 
-  <!-- Modal for Result -->
+  <!-- Modal -->
   <div id="resultModal" class="result-modal">
     <div class="result-content">
       <h2 id="resultTitle"></h2>
       <p id="resultMessage"></p>
       <p id="rewardDetails"></p>
-      <button class="follow-btn" id="followBtn" onclick="window.open('https://www.instagram.com/kayas_healthy_life/', '_blank')">
-        👉 Follow us on Instagram to claim your reward
-      </button>
+      <button class="follow-btn" onclick="window.open('https://www.instagram.com/kayas_healthy_life/', '_blank')">👉 Follow us on Instagram to claim your reward</button>
       <br />
       <button class="close-btn" onclick="closeModal()">Close</button>
     </div>
   </div>
 
   <audio id="spinSound" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
+  <audio id="winSound" src="https://www.soundjay.com/human/sounds/applause-8.mp3"></audio>
 
   <script>
     const canvas = document.getElementById('wheel');
     const ctx = canvas.getContext('2d');
     const spinSound = document.getElementById('spinSound');
+    const winSound = document.getElementById('winSound');
     const resultModal = document.getElementById('resultModal');
     const resultTitle = document.getElementById('resultTitle');
     const resultMessage = document.getElementById('resultMessage');
     const rewardDetails = document.getElementById('rewardDetails');
-    const followBtn = document.getElementById('followBtn');
 
     const prizes = [
       { prize: '10% OFF', details: 'Use this code to get 10% off on your next purchase!' },
@@ -223,12 +222,12 @@
 
     const colors = ['#b7e4c7', '#c1f0dc', '#d2f4ea', '#c7e5c9', '#e1f3e6', '#def2d9'];
 
-    function drawWheel() {
+    function drawWheel(highlightIndex = -1) {
       const arcSize = 2 * Math.PI / prizes.length;
       for (let i = 0; i < prizes.length; i++) {
         const startAngle = i * arcSize;
         const endAngle = startAngle + arcSize;
-        ctx.fillStyle = colors[i % colors.length];
+        ctx.fillStyle = (i === highlightIndex) ? '#ffd166' : colors[i % colors.length];
         ctx.beginPath();
         ctx.moveTo(150, 150);
         ctx.arc(150, 150, 150, startAngle, endAngle);
@@ -251,9 +250,13 @@
     function spin() {
       if (spinning) return;
 
-      if (localStorage.getItem('spin') === 'true') {
-        resultTitle.innerHTML = '⚠️ You already spin!';
-        resultMessage.innerHTML = 'One spin per person.';
+      const lastSpin = localStorage.getItem('lastSpin');
+      const now = Date.now();
+
+      if (lastSpin && now - parseInt(lastSpin) < 12 * 60 * 60 * 1000) {
+        resultTitle.innerHTML = '⏳ Try Again Later!';
+        resultMessage.innerHTML = 'You can spin again after 12 hours.';
+        rewardDetails.innerHTML = "";
         openModal();
         return;
       }
@@ -271,13 +274,15 @@
       canvas.style.transform = `rotate(${totalAngle}deg)`;
 
       setTimeout(() => {
-        localStorage.setItem('spin', 'true');
-        
-        // Calculate the prize based on the final angle of the wheel
+        localStorage.setItem('lastSpin', now.toString());
+
         const arcSize = 360 / prizes.length;
         const degrees = totalAngle % 360;
         const index = Math.floor((360 - degrees) / arcSize) % prizes.length;
         const prize = prizes[index];
+
+        drawWheel(index);
+        winSound.play();
 
         resultTitle.innerHTML = `🎉 You won ${prize.prize}!`;
         resultMessage.innerHTML = "Congratulations!";
