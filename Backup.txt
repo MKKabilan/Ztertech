@@ -1,0 +1,95 @@
+<section class="schedule-section section-padding" id="section_4">
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-12 text-center">
+                            <h2 class="text-white mb-4">Event Schedule</h1>
+
+                            <div class="table-responsive">
+                                <table class="schedule-table table table-dark">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Date</th>
+
+                                            <th scope="col">sample</th>
+
+                                            <th scope="col">sample</th>
+
+                                            <th scope="col">sample</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Day 1</th>
+
+                                            <td class="table-background-image-wrap -background-image">
+                                                <h3>sample</h3>
+
+                                                <p class="mb-2">5:00 - 7:00 PM</p>
+
+                                                <p>sample</p>
+
+                                                <div class="section-overlay"></div>
+                                            </td>
+
+                                            <td style="background-color: #F3DCD4"></td>
+
+                                            <td class="table-background-image-wrap -background-image">
+                                                <h3>sample</h3>
+
+                                                <p class="mb-2">7:00 - 11:00 PM</p>
+
+                                                <p>sample</p>
+
+                                                <div class="section-overlay"></div>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th scope="row">Day 2</th>
+                
+                                            <td style="background-color: #ECC9C7"></td>
+
+                                            <td>
+                                                <h3>sample</h3>
+
+                                                <p class="mb-2">6:30 - 9:30 PM</p>
+
+                                                <p>sample</p>
+                                            </td>
+
+                                            <td style="background-color: #D9E3DA"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <th scope="row">Day 3</th>
+                
+                                            <td class="table-background-image-wrap -background-image">
+                                                <h3>sample</h3>
+
+                                                <p class="mb-2">4:30 - 7:30 PM</p>
+
+                                                <p>sample</p>
+
+                                                <div class="section-overlay"></div>
+                                            </td>
+
+                                            <td style="background-color: #D1CFC0"></td>
+
+                                            <td>
+                                                <h3>sample</h3>
+
+                                                <p class="mb-2">6:00 - 10:00 PM</p>
+
+                                                <p>sample</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
