@@ -80,6 +80,7 @@
       border-radius: 50%;
       border: 6px solid var(--border);
       transition: transform 5s cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: transform;
     }
 
     #pointer {
@@ -92,6 +93,7 @@
       border-left: 20px solid transparent;
       border-right: 20px solid transparent;
       border-bottom: 30px solid var(--primary);
+      z-index: 10;
     }
 
     button.spin-btn, .follow-btn {
@@ -121,6 +123,7 @@
       background: rgba(0, 0, 0, 0.5);
       justify-content: center;
       align-items: center;
+      z-index: 20;
     }
 
     .result-content {
@@ -140,6 +143,7 @@
     .result-content p {
       font-size: 1.2rem;
       margin-bottom: 1.5rem;
+      word-wrap: break-word;
     }
 
     .close-btn {
@@ -198,13 +202,16 @@
     </div>
   </div>
 
-  <audio id="spinSound" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
+  <!-- Sound effects -->
+  <audio id="spinStartSound" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
+  <audio id="spinningSound" src="https://www.soundjay.com/mechanical/sounds/mechanical-spin-01.mp3" loop></audio>
   <audio id="winSound" src="https://www.soundjay.com/human/sounds/applause-8.mp3"></audio>
 
   <script>
     const canvas = document.getElementById('wheel');
     const ctx = canvas.getContext('2d');
-    const spinSound = document.getElementById('spinSound');
+    const spinStartSound = document.getElementById('spinStartSound');
+    const spinningSound = document.getElementById('spinningSound');
     const winSound = document.getElementById('winSound');
     const resultModal = document.getElementById('resultModal');
     const resultTitle = document.getElementById('resultTitle');
@@ -224,25 +231,38 @@
 
     function drawWheel(highlightIndex = -1) {
       const arcSize = 2 * Math.PI / prizes.length;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
       for (let i = 0; i < prizes.length; i++) {
         const startAngle = i * arcSize;
         const endAngle = startAngle + arcSize;
         ctx.fillStyle = (i === highlightIndex) ? '#ffd166' : colors[i % colors.length];
         ctx.beginPath();
-        ctx.moveTo(150, 150);
-        ctx.arc(150, 150, 150, startAngle, endAngle);
-        ctx.lineTo(150, 150);
+        ctx.moveTo(canvas.width / 2, canvas.height / 2);
+        ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, startAngle, endAngle);
+        ctx.lineTo(canvas.width / 2, canvas.height / 2);
         ctx.fill();
 
+        // Draw text
         ctx.save();
-        ctx.translate(150, 150);
+        ctx.translate(canvas.width / 2, canvas.height / 2);
         ctx.rotate(startAngle + arcSize / 2);
         ctx.fillStyle = '#2f3e1c';
-        ctx.font = '14px sans-serif';
+        ctx.font = `${Math.floor(canvas.width / 20)}px sans-serif`;
         ctx.textAlign = 'right';
-        ctx.fillText(prizes[i].prize, 140, 5);
+        ctx.fillText(prizes[i].prize, canvas.width / 2 - 20, 5);
         ctx.restore();
       }
+    }
+
+    // Generate random coupon code for prize (6 chars alphanumeric)
+    function generateCouponCode() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let code = '';
+      for (let i = 0; i < 6; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return code;
     }
 
     let spinning = false;
@@ -250,53 +270,95 @@
     function spin() {
       if (spinning) return;
 
+      // 12 hour cooldown
       const lastSpin = localStorage.getItem('lastSpin');
       const now = Date.now();
 
       if (lastSpin && now - parseInt(lastSpin) < 12 * 60 * 60 * 1000) {
-        resultTitle.innerHTML = '⏳ Try Again Later!';
-        resultMessage.innerHTML = 'You can spin again after 12 hours.';
-        rewardDetails.innerHTML = "";
+        resultTitle.textContent = '⏳ Try Again Later!';
+        resultMessage.textContent = 'You can spin again after 12 hours.';
+        rewardDetails.textContent = "";
         openModal();
         return;
       }
 
       spinning = true;
-      spinSound.play();
-      resultTitle.innerHTML = "Spinning... 🌀";
-      resultMessage.innerHTML = "Please wait...";
-      rewardDetails.innerHTML = "";
 
-      const spins = Math.floor(Math.random() * 3) + 4;
+      // Play spin start sound
+      spinStartSound.currentTime = 0;
+      spinStartSound.play();
+
+      // Start spinning sound loop with slight delay to avoid overlap
+      setTimeout(() => {
+        spinningSound.currentTime = 0;
+        spinningSound.play();
+      }, 300);
+
+      resultTitle.textContent = "Spinning... 🌀";
+      resultMessage.textContent = "Please wait...";
+      rewardDetails.textContent = "";
+
+      // Randomize spins and direction
+      const spins = Math.floor(Math.random() * 3) + 5;
       const randomAngle = Math.random() * 360;
+      const direction = Math.random() > 0.5 ? 1 : -1; // clockwise or counterclockwise
       const totalAngle = 360 * spins + randomAngle;
 
-      canvas.style.transform = `rotate(${totalAngle}deg)`;
+      // Animate rotation with easing
+      let start = null;
+      const duration = 6000; // 6 seconds spin time
+      const initialRotation = getRotationDegrees(canvas.style.transform) || 0;
 
-      setTimeout(() => {
-        localStorage.setItem('lastSpin', now.toString());
+      function easeOut(t) {
+        return 1 - Math.pow(1 - t, 3);
+      }
 
-        const arcSize = 360 / prizes.length;
-        const degrees = totalAngle % 360;
-        const index = Math.floor((360 - degrees) / arcSize) % prizes.length;
-        const prize = prizes[index];
+      function animate(timestamp) {
+        if (!start) start = timestamp;
+        const elapsed = timestamp - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const easedProgress = easeOut(progress);
 
-        drawWheel(index);
-        winSound.play();
+        const currentRotation = initialRotation + direction * totalAngle * easedProgress;
+        canvas.style.transform = `rotate(${currentRotation}deg)`;
 
-        resultTitle.innerHTML = `🎉 You won ${prize.prize}!`;
-        resultMessage.innerHTML = "Congratulations!";
-        rewardDetails.innerHTML = prize.details;
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          spinningSound.pause();
+          spinningSound.currentTime = 0;
 
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
+          localStorage.setItem('lastSpin', now.toString());
 
-        openModal();
-        spinning = false;
-      }, 5000);
+          // Calculate prize index
+          const degrees = ((currentRotation % 360) + 360) % 360; // normalize between 0-360
+          const arcSize = 360 / prizes.length;
+          const index = Math.floor((360 - degrees) / arcSize) % prizes.length;
+          const prize = prizes[index];
+
+          drawWheel(index);
+          winSound.currentTime = 0;
+          winSound.play();
+
+          // Generate coupon code and show result
+          const coupon = generateCouponCode();
+          resultTitle.textContent = `🎉 You won ${prize.prize}!`;
+          resultMessage.textContent = "Congratulations! Here's your unique coupon code:";
+          rewardDetails.textContent = `${coupon}\n${prize.details}`;
+          openModal();
+
+          // Confetti celebration
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+
+          spinning = false;
+        }
+      }
+
+      requestAnimationFrame(animate);
     }
 
     function openModal() {
@@ -305,8 +367,32 @@
 
     function closeModal() {
       resultModal.style.display = 'none';
+      drawWheel(); // redraw wheel without highlight
     }
 
+    // Utility to get current rotation degrees from style.transform
+    function getRotationDegrees(transform) {
+      if (!transform || transform === 'none') return 0;
+      const values = transform.split('(')[1].split(')')[0].split(',');
+      const a = values[0];
+      const b = values[1];
+      const radians = Math.atan2(b, a);
+      let angle = radians * (180 / Math.PI);
+      if (angle < 0) angle += 360;
+      return angle;
+    }
+
+    // Responsive redraw on window resize
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      drawWheel();
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    // Initial draw
     drawWheel();
   </script>
 </body>
