@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="author" content="Kaya Health Care" />
+  <meta name="keywords" content="health care, products, wellness, kaya" />
+  <meta name="description" content="Kaya Health Care - quality health products and services." />
+  <meta property="og:title" content="Kaya - Health Care Store" />
+  <meta property="og:description" content="Discover Kaya's quality health care products." />
+  <meta property="og:image" content="image/logo.png" />
+
+  <title>Kaya - Health Care Store</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="image/logo.png" />
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <a href="https://www.kayas.co.in" aria-label="Kaya Health Care homepage">
+        <img src="image/logo.png" alt="Kaya Health Care Logo" />
+      </a>
+    </div>
+    <nav role="navigation" aria-label="Primary Navigation">
+      <a href="#" class="active" aria-current="page">Home</a>
+      <a href="#">About</a>
+      <a href="#">Order Tracking</a>
+      <a href="#">Contact Us</a>
+      <a href="#" class="cart-icon" id="open-cart" aria-haspopup="dialog" aria-controls="cart-drawer" aria-expanded="false">
+        Cart (<span id="cart-count" aria-live="polite" aria-atomic="true">0</span>)
+      </a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="tracking-section" aria-label="Order Tracking">
+      <div class="tracking-container">
+        <h2>Track Your Shipment</h2>
+        <form id="tracking-form" class="tracking-form" aria-label="Track your shipment">
+          <label for="tracking-number">Enter Tracking Number</label>
+          <input
+            type="text"
+            id="tracking-number"
+            name="tracking-number"
+            placeholder="e.g. KAYA123456789"
+            required
+            aria-required="true"
+          />
+          <button type="submit">Track</button>
+        </form>
+        <div id="tracking-result" class="tracking-result" aria-live="polite"></div>
+      </div>
+    </section>
+    
+    <style>
+      .tracking-section {
+        padding: 3rem 1rem;
+        background-color: #f9fdfd;
+        display: flex;
+        justify-content: center;
+      }
+    
+      .tracking-container {
+        max-width: 500px;
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 100%;
+      }
+    
+      .tracking-container h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #004d40;
+      }
+    
+      .tracking-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+    
+      .tracking-form label {
+        font-weight: bold;
+      }
+    
+      .tracking-form input {
+        padding: 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1rem;
+      }
+    
+      .tracking-form button {
+        background-color: #00796b;
+        color: white;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+    
+      .tracking-form button:hover {
+        background-color: #004d40;
+      }
+    
+      .tracking-result {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background-color: #e0f2f1;
+        border-radius: 8px;
+        display: none;
+      }
+    </style>   
+  </main>
+  <footer>
+    <p>&copy; 2025 Kaya Health Care. All rights reserved.</p>
+  </footer>
+  <script>
+    document.getElementById('tracking-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const trackingNumber = document.getElementById('tracking-number').value.trim();
+      const resultBox = document.getElementById('tracking-result');
+  
+      if (!trackingNumber) {
+        resultBox.innerHTML = "Please enter a valid tracking number.";
+        resultBox.style.display = 'block';
+        return;
+      }
+  
+      // Simulated result (replace with API later)
+      resultBox.innerHTML = `<strong>Status:</strong> In Transit<br><strong>Tracking ID:</strong> ${trackingNumber}<br><strong>Last Update:</strong> May 24, 2025 - Dispatched from Warehouse.`;
+      resultBox.style.display = 'block';
+    });
+  </script> 
+</body>
+</html>
