@@ -1,0 +1,173 @@
+.about-section {
+  background: linear-gradient(135deg, #f1f8e9, #ffffff);
+  padding: 5rem 2rem;
+  font-family: 'Segoe UI', sans-serif;
+  color: #2d3a00;
+}
+
+.about-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.about-left {
+  text-align: center;
+}
+
+.about-logo1 {
+  max-width: 2800px;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+.about-logo1:hover {
+  transform: scale(1.05);
+}
+
+.about-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  color: #405e01;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.about-description {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: #444;
+}
+
+.about-highlights {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 1.5rem 0;
+}
+
+.about-highlights li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.about-highlights i {
+  color: #74aa06;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* Stats Section */
+.stats-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.stat-box {
+  flex: 1 1 180px;
+  background-color: #ffffff;
+  border: 1px solid #e0eccd;
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+}
+
+.stat-box:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.stat-box h3 {
+  font-size: 2.25rem;
+  color: #405e01;
+  margin-bottom: 0.3rem;
+}
+
+.stat-box p {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .stat-box h3 {
+    font-size: 1.75rem;
+  }
+
+  .about-description,
+  .about-highlights li {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-section {
+    padding: 3rem 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.6rem;
+  }
+
+  .stat-box {
+    flex: 1 1 100%;
+  }
+}
+
+.cta-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #7bbf23, #5e9800);
+    color: #fff;
+    padding: 0.85rem 1.8rem;
+    border-radius: 50px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 15px rgba(126, 176, 33, 0.3);
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+  
+  .cta-button:hover {
+    background: linear-gradient(135deg, #689c1f, #466e00);
+    box-shadow: 0 8px 18px rgba(94, 152, 0, 0.4);
+    transform: translateY(-2px);
+  }
+  
+  .cta-button:active {
+    transform: scale(0.97);
+    box-shadow: 0 4px 10px rgba(94, 152, 0, 0.3);
+  }
+
+  @media (max-width: 480px) {
+    .cta-button {
+      width: 100%;
+      text-align: center;
+      font-size: 1rem;
+      padding: 1rem;
+    }
+  }
+  
