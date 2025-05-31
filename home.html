@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="author" content="Kaya Health Care" />
+  <meta name="keywords" content="health care, products, wellness, kaya" />
+  <meta name="description" content="Kaya Health Care - quality health products and services." />
+  <meta property="og:title" content="Kaya - Health Care Store" />
+  <meta property="og:description" content="Discover Kaya's quality health care products." />
+  <link rel="canonical" href="https://www.kayas.co.in/" />
+    <!--Fivcon-->
+    <meta property="og:image" content="images/logo.png" />
+    <!--Change Title Here-->
+  <title>Kaya's Healthy Life - Health Care Store</title>
+  <!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- External CSS -->
+<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/shop.css" />
+<link rel="stylesheet" href="css/product.css" />
+<link rel="stylesheet" href="css/image.css" />
+  <!--logos-->
+  <link rel="icon" type="image/png" sizes="32x32" href="images/logo/logo-main.PNG" />
+  <link rel="apple-touch-icon" sizes="180x180" href="images/logo/logo.png" />
+</head>
+<body>
+  <header>
+    <div class="nav-container">
+      <img src="images/logo/logo.png" alt="Kaya Logo" class="logo" />
+      <nav>
+        <ul class="nav-links">
+          <li><a href="home.html" style="color: #4d6600;" class="active">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="oder.html">Oder Tracking</a></li>
+          <button id="cart-button" aria-label="Open shopping cart">
+            <i class="fas fa-shopping-cart"></i>
+            <span id="cart-count">0</span>
+          </button>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <section class="hero">
+    <img src="images/logo/logo-main.png" alt="Natural wellness" />
+    <div class="hero-content">
+      <h1 style="color: black;">Welcome to Kaya's</h1>
+      <p style="color: black;">journey to natural wellness begins here.  <a href="#about" class="btn-about">About Kaya's</a></p>
+    </div>
+  </section>
+  <main id="main">
+    <section class="products-container" aria-label="Product Listing">
+      <!-- Products will be dynamically injected here -->
+    </section>
+
+    <aside id="cart-drawer" aria-label="Shopping Cart" aria-hidden="true" tabindex="-1">
+        <div class="cart-header">
+          <h2>Your Cart</h2>
+          <button id="close-cart" aria-label="Close shopping cart"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items">
+          <!-- Cart items injected dynamically -->
+        </div>
+        <div class="cart-footer">
+          <div class="cart-total">
+            Total: ₹<span id="cart-total">0</span>
+          </div>
+          <button id="checkout-btn" class="checkout-btn">Checkout</button>
+        </div>
+    </aside>    
+      <div id="cart-overlay" class="cart-overlay" tabindex="-1" aria-hidden="true"></div>
+
+      <section class="testimonials-section" id="testimonials">
+        <div class="testimonial-content">
+          <h2 style="color: #4d6600;">What our Happy Customers Say!</h2>
+          <div class="testimonial-list" id="testimonialList">
+            <!-- Dynamic cards will be inserted here -->
+          </div>
+        </div>
+      </section>
+
+      <section class="certification-section">
+        <div class="certification-container">
+          <img src="images/Lincese/15+.jpg" alt="15 years" loading="lazy"/>
+          <img src="images/Lincese/msme.png" alt="MSME" loading="lazy" />
+          <img src="images/Lincese/fssai.png" alt="FSSAI" loading="lazy" />
+        </div>
+      </section>
+      <section class="gallery-section">
+        <h2>Our Dynamic Gallery</h2>
+        <div class="gallery-grid" id="gallery">
+          <!-- Images will be injected here dynamically -->
+        </div>
+      
+        <!-- Lightbox Modal -->
+        <div class="lightbox" id="lightbox">
+          <button class="close-btn" id="lightbox-close">&times;</button>
+          <img class="lightbox-img" id="lightbox-img" src="" alt="Full View" />
+          <div class="lightbox-nav">
+            <button id="prev-btn">&#10094;</button>
+            <button id="next-btn">&#10095;</button>
+          </div>
+        </div>
+      </section>      
+      <section class="contact-us-section" id="contact">
+        <h2>Contact Us</h2>
+        <div class="contact-container">
+          <div class="contact-details">
+            <p><i class="fas fa-envelope"></i> Email: <a href="mailto:admin@kayas.co.in">admin@kayas.co.in</a></p>
+            <p><i class="fas fa-phone-alt"></i> Phone: <a href="tel:+919003031324">+91 9003031324</a></p>
+            <p><i class="fas fa-map-marker-alt"></i> No. 8 Kaveri Street, Maharani Avenue,<br> Vadavalli, Coimbatore, 641041</p>
+          </div>
+          <div class="contact-map">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3915.9393141340836!2d76.91359151480052!3d11.001212592152803!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba859fce6319a01%3A0xa51d5e7c03b10fd0!2sEmblish%20Coimbatore!5e0!3m2!1sen!2sin!4v1685030040264!5m2!1sen!2sin"
+              width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </section>
+  </main>
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section about">
+        <img src="images/logo/logo-main.PNG" alt="Kaya Logo" class="footer-logo">
+        <p>Kaya's is committed to promoting wellness and natural living for all.</p>
+        <div class="social-icons">
+          <a href="https://www.facebook.com/KayasHealthyLife" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/kayas_healthy_life/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="shop.html">Our Products</a></li>
+          <li><a href="health.html">Health Tips</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="health.html">Blog</a></li>
+          <li><a href="e-books.html">E-books</a></li>
+          <li><a href="order.html">Tracking</a></li>
+          <li><a href="event.html">Events</a></li>
+          <li><a href="health.html">Nutrition Guides</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Kaya's Healthy Life. This Website is Developed and Maintained by <a href="https://www.ztertech.in" target="_blank" rel="noopener">ZterTech</a>.</p>
+    </div>
+  </footer>
+
+  <script src="js/shop.js" defer></script>
+  <script src="js/script.js" defer></script>
+  <script src="js/script1.js" defer></script>
+  <script src="js/image.js" defer></script>
+</body>
+</html>
